@@ -5,7 +5,7 @@
 
 
     <application
-        android:label="turkeysh_light"
+        android:label="perkyiot_light"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

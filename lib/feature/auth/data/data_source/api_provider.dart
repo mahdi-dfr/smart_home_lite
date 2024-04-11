@@ -9,6 +9,7 @@ class AuthApiProvider {
   Future<dynamic> loginUser(String username, String password) async {
     try {
       _dio.interceptors.add(AuthApiInterceptor());
+
       var response = await _dio.post(UrlConstant.baseUrl + UrlConstant.login,
           options: Options(responseType: ResponseType.json, method: 'POST'),
           data: {'username': username, 'password': password});

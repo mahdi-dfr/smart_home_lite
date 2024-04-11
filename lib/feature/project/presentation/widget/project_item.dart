@@ -26,7 +26,7 @@ class ProjectItemWidget extends StatelessWidget {
         width: width * 0.4,
         height: height / 5,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: CustomColors.itemColor,
           borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
         ),
         child: Container(
@@ -37,7 +37,7 @@ class ProjectItemWidget extends StatelessWidget {
             image: DecorationImage(
                 image: AssetImage(Images.backgroundLogo),
                 fit: BoxFit.cover,
-                opacity: 0.05),
+                opacity: 0.11),
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -48,7 +48,7 @@ class ProjectItemWidget extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: AppStyles.style5,
+                style: AppStyles.style13,
                 textAlign: TextAlign.center,
               ),
             ),

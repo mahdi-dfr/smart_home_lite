@@ -24,8 +24,9 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: height/10,
         automaticallyImplyLeading: true,
+        foregroundColor: CustomColors.foregroundColor,
         backgroundColor: CustomColors.backgroundColor,
-        title: SvgPicture.asset(Images.logoWide, width: width/5,),
+        title: Image.asset(Images.logoWide, width: width/5,),
         centerTitle: true,
         actions: [
           Padding(
@@ -97,9 +98,9 @@ class HomePage extends StatelessWidget {
                                     padding: const EdgeInsets.all(12),
                                     width: width * 0.25,
                                     height: height * 0.4,
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
+                                    decoration: BoxDecoration(
+                                        color: CustomColors.itemColor,
+                                        borderRadius: const BorderRadius.only(
                                             bottomRight: Radius.circular(
                                                 AppDimensions.borderRadius),
                                             bottomLeft: Radius.circular(

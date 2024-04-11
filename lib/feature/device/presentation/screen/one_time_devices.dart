@@ -17,75 +17,81 @@ class OneTimeDeviceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery
-        .sizeOf(context)
-        .width;
+    var width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
-        appBar: AppBar(
-          toolbarHeight: 50,
-          backgroundColor: CustomColors.backgroundColor,
-          title: SvgPicture.asset(Images.logoWide, width: width/5,),
-          centerTitle: true,
+      appBar: AppBar(
+        toolbarHeight: 50,
+        foregroundColor: CustomColors.foregroundColor,
+        backgroundColor: CustomColors.backgroundColor,
+        title: Image.asset(
+          Images.logoWide,
+          width: width / 5,
         ),
+        centerTitle: true,
+      ),
       body: SafeArea(child: Obx(() {
         return _controller.isDeviceLoading.value
             ? const Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Center(
-            child: _controller.deviceList.isEmpty
-                ? const Text('اطلاعاتی برای نمایش وجود ندارد!')
-                : CustomScrollView(slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset(
-                        Images.right,
-                        width: width / 3,
-                        color: CustomColors.foregroundColor,
-                      ),
-                      const Text(
-                        'کلیدهای تک تایمر',
-                        style: AppStyles.style1,
-                      ),
-                      SvgPicture.asset(
-                        Images.left,
-                        width: width / 3,
-                        color: CustomColors.foregroundColor,
-                      ),
-                    ],
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Center(
+                  child: _controller.deviceList.isEmpty
+                      ? const Text(
+                          'اطلاعاتی برای نمایش وجود ندارد!',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : CustomScrollView(slivers: [
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SvgPicture.asset(
+                                    Images.right,
+                                    width: width / 3,
+                                    color: CustomColors.foregroundColor,
+                                  ),
+                                  const Text(
+                                    'کلیدهای تک تایمر',
+                                    style: AppStyles.style13,
+                                  ),
+                                  SvgPicture.asset(
+                                    Images.left,
+                                    width: width / 3,
+                                    color: CustomColors.foregroundColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SliverGrid.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 6,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 18,
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return OneTimeWidget(
+                                    title: _controller
+                                        .oneTimeDeviceList[index].name,
+                                    boardId: _controller.deviceList[index]
+                                        .nodeProject?.boardProject,
+                                    nodeId: _controller.deviceList[index]
+                                        .nodeProject?.uniqueId,
+                                    onPressed: () {});
+                              },
+                              itemCount: _controller.oneTimeDeviceList.length),
+                        ]),
                 ),
-              ),
-              SliverGrid.builder(
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 18,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return OneTimeWidget(title: _controller.oneTimeDeviceList[index]
-                        .name, boardId: _controller.deviceList[index].nodeProject?.boardProject,
-                        nodeId: _controller.deviceList[index].nodeProject?.uniqueId,
-                        onPressed: (){
-                          print('ssssaaaaaa');
-
-                        });
-                  },
-                  itemCount: _controller.oneTimeDeviceList.length),
-            ]),
-          ),
-        );
+              );
       })),
     );
   }

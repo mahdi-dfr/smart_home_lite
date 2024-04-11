@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                       height: height/2,
                     ),
                     const Text(
-                      'Turkeysh Smart Home',
+                      'Perkyiot Smart Home',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

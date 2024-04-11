@@ -63,9 +63,9 @@ class OneTimeWidget extends StatelessWidget {
       aspectRatio: 1,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: CustomColors.itemColor,
           image: const DecorationImage(
-              image: AssetImage(( Images.backgroundLogo)),
+              image: AssetImage((Images.backgroundLogo)),
               fit: BoxFit.cover,
               opacity: 0.05),
           borderRadius: BorderRadius.circular(
@@ -78,12 +78,12 @@ class OneTimeWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                  vertical: 12),
+                  vertical: 8),
               child: Text(
                 title ??
                     '',
                 style:
-                const TextStyle(fontSize: 16),
+                 const TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             Expanded(
@@ -106,8 +106,6 @@ class OneTimeWidget extends StatelessWidget {
                             'node_status': true
                           },
                           '$projectName/$username/relay');
-
-
                     } else {
                       logic.publishMessage(
                           {
@@ -124,9 +122,7 @@ class OneTimeWidget extends StatelessWidget {
                       color: isOneTimeButtonEnabled
                           .value ? Colors.green : CustomColors
                           .foregroundColor,
-                      size: Get.width > 600
-                          ? Get.width / 8
-                          : Get.width / 6),
+                      size: Get.width / 14),
                 );
               }),
             ),

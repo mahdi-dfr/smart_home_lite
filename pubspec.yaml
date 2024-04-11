@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   dio: ^5.3.1
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.9
   connectivity_plus: ^4.0.2
   get_storage: ^2.1.1
   mqtt_client: ^10.0.0
@@ -73,7 +73,7 @@ flutter:
     - assets/images/logo_white1.svg
     - assets/images/left.svg
     - assets/images/right.svg
-    - assets/images/logo_wide.svg
+    - assets/images/logo_wide.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

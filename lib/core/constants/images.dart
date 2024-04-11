@@ -1,6 +1,6 @@
 class Images {
   static const String logo = 'assets/images/logo_raw.svg';
-  static const String logoWide = 'assets/images/logo_wide.svg';
+  static const String logoWide = 'assets/images/logo_wide.png';
   static const String backgroundLogo = 'assets/images/logo_raw.png';
   static const String home = 'assets/images/home.svg';
   static const String left = 'assets/images/left.svg';

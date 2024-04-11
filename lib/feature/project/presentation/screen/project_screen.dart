@@ -24,7 +24,7 @@ class ProjectScreen extends StatelessWidget {
         toolbarHeight: height/10,
         automaticallyImplyLeading: true,
         backgroundColor: CustomColors.backgroundColor,
-        title: SvgPicture.asset(Images.logoWide, width: width/5,),
+        title: Image.asset(Images.logoWide, width: width/5,),
         centerTitle: true,
       ),
       body: SafeArea(

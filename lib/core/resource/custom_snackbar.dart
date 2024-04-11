@@ -6,5 +6,5 @@ customSuccessSnackBar(String title){
 }
 
 customErrorSnackBar(String title){
-  return Get.snackbar(title, '', backgroundColor: Colors.green,);
+  return Get.snackbar(title, '', backgroundColor: Colors.red,);
 }
