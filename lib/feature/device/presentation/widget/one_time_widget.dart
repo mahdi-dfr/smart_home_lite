@@ -10,22 +10,21 @@ import '../../../../core/resource/mqtt_service.dart';
 
 class OneTimeWidget extends StatelessWidget {
   OneTimeWidget(
-      {required this.title, required this.boardId, required this.nodeId, required this.onPressed, Key? key})
+      {required this.title, required this.boardUniqueId, required this.nodeId, Key? key})
       : super(key: key);
 
   final _controller = Get.find<MqttService>();
   var isOneTimeButtonEnabled = false.obs;
   String? title;
-  int? boardId;
+  int? boardUniqueId;
   int? nodeId;
-  Function() onPressed;
 
   late String projectName;
   late String username;
 
   setRelayOneTimeValue() {
     for (var element in _controller.relayDataList) {
-      if (element.boardId == boardId) {
+      if (element.boardId == boardUniqueId) {
         switch (nodeId) {
           case 1:
             isOneTimeButtonEnabled.value = element.key1 ?? false;
@@ -101,7 +100,8 @@ class OneTimeWidget extends StatelessWidget {
                       ///////////// _controller را به logic تغییر دادم:
                       logic.publishMessage(
                           {
-                            'board_id': boardId,
+                            'type':'relay',
+                            'board_id': boardUniqueId,
                             'node_id': nodeId,
                             'node_status': true
                           },
@@ -109,9 +109,10 @@ class OneTimeWidget extends StatelessWidget {
                     } else {
                       logic.publishMessage(
                           {
-                            'board_id': boardId,
+                            'type':'relay',
+                            'board_id': boardUniqueId,
                             'node_id': nodeId,
-                            'node_status': false
+                            'node_status': true
                           },
                           '$projectName/$username/relay');
                     }

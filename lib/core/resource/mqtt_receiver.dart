@@ -37,7 +37,7 @@ class MqttReceiver extends GetxController {
       });
       relayCount = relayList.length;
       if(relayCount! > 0){
-        _mqttController.publishMessage({'relay_nums': relayCount}, relayTopic);
+        _mqttController.publishMessage({'type': 'relay_refresh', 'relay_nums': relayCount}, relayTopic);
       }
     });
 

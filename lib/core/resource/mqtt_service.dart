@@ -1,14 +1,15 @@
+
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../feature/device/presentation/controller/relay_data.dart';
 import '../constants/utils.dart';
 
-class MqttService extends GetxController {
+class MqttService extends GetxController{
   late MqttServerClient client;
 
   String projectName = GetStorage().read(AppUtils.projectNameConst);
@@ -27,10 +28,8 @@ class MqttService extends GetxController {
       const Uuid uuid = Uuid();
       return uuid.v4();
     }
-
     String uniqueClientId = generateUniqueClientId();
-    client = MqttServerClient.withPort(
-        'remote-asiatech.runflare.com', uniqueClientId, 31951);
+    client = MqttServerClient.withPort('remote-asiatech.runflare.com',uniqueClientId, 31951);
     client.logging(on: true);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
@@ -63,7 +62,7 @@ class MqttService extends GetxController {
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
       final pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       print('Received message: topic is ${c[0].topic}, payload is $pt');
     });
 
@@ -77,28 +76,34 @@ class MqttService extends GetxController {
   }
 
   subscribeMessage(String topic) {
+
     print('MQTT_LOGS::Subscribing to the test/lol topic');
     client.subscribe(topic, MqttQos.atMostOnce);
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
       final payload =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
       print(
           'MQTT_LOGS:: New data arrived: topic is <${c[0].topic}>, payload is $payload');
 
-      if (topic.contains('relay')) {
+
+      if(topic.contains('relay')){
         print('///////..');
         setRelayList(payload);
       }
+
     });
+
   }
 
   void publishMessage(Map<String, dynamic> message, String topic) {
     String pubTopic = topic;
     final builder = MqttClientPayloadBuilder();
-    builder.addString(json.encode(message));
+    builder.addString(
+        json.encode(message)
+    );
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
@@ -129,17 +134,18 @@ class MqttService extends GetxController {
     print('Ping response client callback invoked');
   }
 
-  bool parseBinaryMessage(String data, int index) {
+  bool parseBinaryMessage(String data ,int index){
     return data[index] == '1' ? true : false;
   }
 
-  setRelayList(String payload) {
+  setRelayList(String payload){
     final Map<String, dynamic> jsonMessage = json.decode(payload);
+    print('.....................');
+    print(jsonMessage);
 
     removeSameMessages(jsonMessage);
 
-    RelayData relayData = RelayData(
-      boardId: jsonMessage['board_id'],
+    RelayData relayData = RelayData(boardId: jsonMessage['board_id'],
       key1: parseBinaryMessage(jsonMessage['node_status'], 0),
       key2: parseBinaryMessage(jsonMessage['node_status'], 1),
       key3: parseBinaryMessage(jsonMessage['node_status'], 2),
@@ -155,17 +161,18 @@ class MqttService extends GetxController {
     );
 
     relayDataList.add(relayData);
+
     update();
   }
 
-  removeSameMessages(Map<String, dynamic> jsonMessage) {
+  removeSameMessages(Map<String, dynamic> jsonMessage){
     int elementIndex = -1;
     relayDataList.forEach((element) {
-      if (element.boardId == jsonMessage['board_id']) {
+      if(element.boardId == jsonMessage['board_id']){
         elementIndex = relayDataList.indexOf(element);
       }
     });
-    if (elementIndex != -1) {
+    if(elementIndex != -1){
       relayDataList.removeAt(elementIndex);
     }
   }
@@ -175,4 +182,6 @@ class MqttService extends GetxController {
     client.disconnect();
     super.onClose();
   }
+
+
 }

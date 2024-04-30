@@ -82,11 +82,10 @@ class OneTimeDeviceScreen extends StatelessWidget {
                                 return OneTimeWidget(
                                     title: _controller
                                         .oneTimeDeviceList[index].name,
-                                    boardId: _controller.deviceList[index]
-                                        .nodeProject?.boardProject,
+                                    boardUniqueId: _controller.deviceList[index]
+                                        .projectBoard?.uniqueId,
                                     nodeId: _controller.deviceList[index]
-                                        .nodeProject?.uniqueId,
-                                    onPressed: () {});
+                                        .nodeProject?.uniqueId,);
                               },
                               itemCount: _controller.oneTimeDeviceList.length),
                         ]),

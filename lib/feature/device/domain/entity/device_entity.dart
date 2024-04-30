@@ -2,39 +2,45 @@ import '../../data/model/device.dart';
 
 class DeviceEntity {
   int? id;
+  NodeProject? nodeProject;
+  ProjectBoard? projectBoard;
   String? name;
   String? deviceType;
+  int? eventId;
   String? createdAt;
   String? deleteAt;
   String? updateAt;
   int? room;
   int? project;
-  NodeProject? nodeProject;
 
-  DeviceEntity({this.id,
+  DeviceEntity({
+    this.id,
+    this.nodeProject,
+    this.projectBoard,
     this.name,
     this.deviceType,
+    this.eventId,
     this.createdAt,
     this.deleteAt,
     this.updateAt,
     this.room,
     this.project,
-    this.nodeProject});
+  });
 }
 
 class NodeProjectEntity {
   int? id;
-  String? nodeType;
+  int? nodeType;
   int? uniqueId;
   bool? isActive;
   int? boardProject;
   int? project;
 
-  NodeProjectEntity({this.id,
-    this.nodeType,
-    this.uniqueId,
-    this.isActive,
-    this.boardProject,
-    this.project});
-
+  NodeProjectEntity(
+      {this.id,
+        this.nodeType,
+        this.uniqueId,
+        this.isActive,
+        this.boardProject,
+        this.project});
 }
