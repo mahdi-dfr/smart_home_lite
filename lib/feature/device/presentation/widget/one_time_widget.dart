@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:marquee/marquee.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/dimens.dart';
@@ -9,9 +11,7 @@ import '../../../../core/constants/utils.dart';
 import '../../../../core/resource/mqtt_service.dart';
 
 class OneTimeWidget extends StatelessWidget {
-  OneTimeWidget(
-      {required this.title, required this.boardUniqueId, required this.nodeId, Key? key})
-      : super(key: key);
+  OneTimeWidget({required this.title, required this.boardUniqueId, required this.nodeId, Key? key}) : super(key: key);
 
   final _controller = Get.find<MqttService>();
   var isOneTimeButtonEnabled = false.obs;
@@ -21,6 +21,7 @@ class OneTimeWidget extends StatelessWidget {
 
   late String projectName;
   late String username;
+  var isSwitchLoading = false.obs;
 
   setRelayOneTimeValue() {
     for (var element in _controller.relayDataList) {
@@ -53,84 +54,109 @@ class OneTimeWidget extends StatelessWidget {
         }
       }
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          color: CustomColors.itemColor,
-          image: const DecorationImage(
-              image: AssetImage((Images.backgroundLogo)),
-              fit: BoxFit.cover,
-              opacity: 0.05),
-          borderRadius: BorderRadius.circular(
-              AppDimensions.borderRadius),
-          border: Border.all(
-              color: CustomColors.foregroundColor,
-              width: 1),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 8),
-              child: Text(
-                title ??
-                    '',
-                style:
-                 const TextStyle(fontSize: 16, color: Colors.white),
+    final textWidth = _calculateTextWidth(title ?? '', const TextStyle(fontSize: 14, color: Colors.white));
+
+    return LayoutBuilder(builder: (context, constraint) {
+      return AspectRatio(
+        aspectRatio: 1,
+        child:  Container(
+          decoration: BoxDecoration(
+            color: CustomColors.itemColor,
+            image: const DecorationImage(
+                image: AssetImage((Images.backgroundLogo)),
+                fit: BoxFit.cover,
+                opacity: 0.05),
+            borderRadius: BorderRadius.circular(
+                AppDimensions.borderRadius),
+            border: Border.all(
+                color: CustomColors.foregroundColor,
+                width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex:2,
+                child: Obx(() {
+                  return !isSwitchLoading.value
+                      ? GetBuilder<MqttService>(builder: (logic) {
+                          setRelayOneTimeValue();
+                          return IconButton(
+                            onPressed: () async {
+                              logic.update();
+                              projectName = GetStorage().read(AppUtils.projectNameConst);
+                              username = GetStorage().read(AppUtils.username);
+
+                              if (!isOneTimeButtonEnabled.value) {
+                                ///////////// _controller را به logic تغییر دادم:
+                                logic.publishMessage({
+                                  'type': 'relay',
+                                  'board_id': boardUniqueId,
+                                  'node_id': nodeId,
+                                  'node_status': true
+                                }, '$projectName/$username/relay');
+                              } else {
+                                logic.publishMessage({
+                                  'type': 'relay',
+                                  'board_id': boardUniqueId,
+                                  'node_id': nodeId,
+                                  'node_status': false
+                                }, '$projectName/$username/relay');
+                              }
+
+                              isSwitchLoading.value = true;
+                              await Future.delayed(const Duration(seconds: 2));
+                              isSwitchLoading.value = false;
+                            },
+                            icon: Icon(Icons.power_settings_new_rounded,
+                                color: isOneTimeButtonEnabled.value ? Colors.green : CustomColors.foregroundColor,
+                                size: Get.width / 14),
+                          );
+                        })
+                      : LoadingAnimationWidget.inkDrop(color: CustomColors.foregroundColor, size: 35);
+                }),),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: textWidth + 20 > constraint.maxWidth
+                      ? Marquee(
+                          text: title ?? '',
+                          style: const TextStyle(fontSize: 14,color: Colors.white),
+                          scrollAxis: Axis.horizontal,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          blankSpace: 20.0,
+                          velocity: 60.0,
+                          pauseAfterRound: const Duration(seconds: 1),
+                          startPadding: 10.0,
+                          accelerationDuration: const Duration(seconds: 1),
+                          accelerationCurve: Curves.linear,
+                          decelerationDuration: const Duration(milliseconds: 500),
+                          decelerationCurve: Curves.easeOut,
+                        )
+                      : Text(
+                          title ?? '',
+                          style: const TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                ),
               ),
-            ),
-            Expanded(
-              child: GetBuilder<MqttService>(builder: (logic) {
-                setRelayOneTimeValue();
-                return IconButton(
-                  onPressed: () {
-                    logic.update();
-                    projectName = GetStorage().read(
-                        AppUtils.projectNameConst);
-                    username = GetStorage().read(
-                        AppUtils.username);
-
-                    if (!isOneTimeButtonEnabled.value) {
-                      ///////////// _controller را به logic تغییر دادم:
-                      logic.publishMessage(
-                          {
-                            'type':'relay',
-                            'board_id': boardUniqueId,
-                            'node_id': nodeId,
-                            'node_status': true
-                          },
-                          '$projectName/$username/relay');
-                    } else {
-                      logic.publishMessage(
-                          {
-                            'type':'relay',
-                            'board_id': boardUniqueId,
-                            'node_id': nodeId,
-                            'node_status': true
-                          },
-                          '$projectName/$username/relay');
-                    }
-                  },
-                  icon: Icon(
-                      Icons
-                          .power_settings_new_rounded,
-                      color: isOneTimeButtonEnabled
-                          .value ? Colors.green : CustomColors
-                          .foregroundColor,
-                      size: Get.width / 14),
-                );
-              }),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
+  }
 
+  double _calculateTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.rtl,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size.width;
   }
 }

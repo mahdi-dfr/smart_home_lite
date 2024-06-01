@@ -42,6 +42,8 @@ dependencies:
   get_storage: ^2.1.1
   mqtt_client: ^10.0.0
   uuid: ^4.2.1
+  loading_animation_widget: ^1.2.0+4
+  marquee: ^2.2.3
 
 dev_dependencies:
   flutter_test:
